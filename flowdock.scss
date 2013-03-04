@@ -1,0 +1,575 @@
+/////////////
+//  SETUP  //
+/////////////
+
+// font
+$baseFontFamily: Helvetica,"Segoe UI",Arial,sans-serif;
+$smallFontSize:  11px;
+$baseFontSize:   12px;
+$mediumFontSize: 13px;
+
+// font colors
+$mainColor:   #a79a80;
+$linkColor:   #dac991;
+$activeColor: #e5e664;
+$inputColor:  #111;
+$preColor:    $mainColor;
+$tagColor:    $linkColor;
+/*
+// font colors
+$mainColor:   #5d5140;
+$linkColor:   #3e2c24;
+$activeColor: #2c1c16;
+$inputColor:  #5d5140;
+$preColor:    #e0d2b1;
+$tagColor:    $preColor;
+*/
+// background colors
+$mainBg:      #222;
+$navbarBg:    #222;
+$toolbarBg:   #000;
+$highlightBg: #1b1b1b;
+$inputBg:     #444;
+$preBg:       #2a2a2a;
+$tagBg:       #000;
+/*
+// background colors
+$mainBg:      #eee0be;
+$navbarBg:    #eee0be;
+$toolbarBg:   #625644;
+$highlightBg: #f9ebc9;
+$inputBg:     #fff;
+$preBg:       #716552;
+$tagBg:       #605441;
+*/
+// navbar
+$navbarHeight: 28px;
+
+// toolbar
+$toolbarHeight:  30px;
+$toolbarSpacing: 2px;
+
+// borders
+$mainBorderColor: rgba(0, 0, 0, 0.12);//#191919;
+//$mainBorderColor: #e5d7b5;
+
+
+
+///////////////
+//  HELPERS  //
+///////////////
+// no fancy box shadow
+@mixin no-box-shadow {
+  -webkit-box-shadow: none;
+  -moz-box-shadow:    none;
+  box-shadow:         none;
+}
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+       -o-border-radius: $radius;
+          border-radius: $radius;
+}
+
+
+
+// generic
+/*
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing:    antialiased;
+  font-smoothing:         antialiased;
+}
+*/
+html, button, input, select, textarea {
+  font-family: $baseFontFamily;
+}
+body, input, select, textarea, button {
+  font-size: $baseFontSize;
+  //line-height: 20px;
+  color: $mainColor;
+}
+html, body {
+  background: $mainBg;
+}
+a, a:hover, a:visited {
+  color: $linkColor;
+}
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea {
+  border-radius: 0;
+  background: $inputBg;
+  border: none;
+  color: $inputColor;
+}
+
+
+/**
+ * removes borders and use a dark shadow
+ * to vertically separate main areas.
+ */
+#chat, #inbox.filtering > .inbox-message-list {
+  border-left: none;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+}
+
+// navbar
+nav#tab-bar {
+  background: $navbarBg;
+  height: $navbarHeight;
+}
+.tab-link {
+  height: $navbarHeight;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+.flow {
+  padding-top: $navbarHeight;
+}
+#user-menu {
+  background: $navbarBg;
+}
+.user-menu-avatar {
+  height: $navbarHeight;
+  width:  $navbarHeight;
+  background-color: $navbarBg;
+}
+#flow-dropdown-item {
+  background: $navbarBg;
+}
+body.single-pane #pane-switcher {
+  top: $navbarHeight;
+}
+
+
+/**
+ * reduce toolbar height avatar, search filter...
+ * new toolbar height is now 36px and the (min) spacing
+ * between child elements is 2px.
+ */
+.toolbar, .inbox-toolbar, .chat-toolbar, .single-message-toolbar {
+  height: $toolbarHeight;
+  padding: $toolbarSpacing 0;
+  background: $toolbarBg;
+  border-bottom: none;
+}
+
+.chat-message-list, .inbox-message-list {
+  top: $toolbarHeight;
+}
+
+.chat-toolbar {
+  ul.userbar.online {
+    left:  $toolbarHeight;
+    right: $toolbarHeight;
+  }
+  li.user,
+  li.dummy {
+    margin: 0 $toolbarSpacing 0 0;
+  }
+  li.user .avatar,
+  li.dummy .avatar,
+  li.user .user-menu-avatar,
+  li.dummy .user-menu-avatar {
+    width:  $toolbarHeight - $toolbarSpacing * 2;
+    height: $toolbarHeight - $toolbarSpacing * 2;
+    background-color: $toolbarBg;
+    @include border-radius(0);
+    opacity: 0.35;
+  }
+  li.user.active .avatar,
+  li.active.dummy .avatar,
+  li.user.active .user-menu-avatar,
+  li.active.dummy .user-menu-avatar {
+    @include no-box-shadow;
+    opacity: 0.75;
+  }
+}
+
+.toolbar-button {
+  border: none !important;
+  padding: 0 !important;
+  height: $toolbarHeight - $toolbarSpacing * 2;
+  width:  $toolbarHeight - $toolbarSpacing * 2;
+  color: #777 !important;
+  background: $mainBg !important;
+  border-radius: 0;
+  &.context {
+    width: auto;
+    padding: 0 7px !important;
+  }
+  &.icon {
+    width: $toolbarHeight - $toolbarSpacing * 2;
+    &.left {
+      margin-left: $toolbarSpacing;
+    }
+    &.right {
+      margin-right: $toolbarSpacing;
+    }
+  }
+  &:hover,
+  &.hover {
+    @include no-box-shadow;
+    background: #555 !important;
+  }
+}
+
+.inbox-toolbar {
+  .tokenist,
+  .full-text input {
+    height: $toolbarHeight - $toolbarSpacing * 2;
+  }
+  input[type="text"],
+  .tokenist {
+    padding: 6px 0;
+  }
+  button#search-submit,
+  button#filter-reset {
+    color: #111;
+  }
+  button#search-submit:hover,
+  button#search-submit:active {
+    color: #bbb;
+  }
+  form#search {
+    @include no-box-shadow;
+    background: $inputBg;
+    border: none;
+    border-radius: 0;
+  }
+}
+
+#chat form {
+  background: #333;
+  border-color: #000;
+  padding: 0;
+  li.upload {
+    margin-right: 0;
+    button {
+      width: 39px;
+    }
+  }
+  li.send {
+    margin-left: 0;
+  }
+}
+
+.chat-message,
+.comment-message,
+.action-message,
+.line-message,
+.status-message,
+.file-message,
+.error-message,
+.inbox-comment-message,
+.mention-message,
+.inbox-message,
+.info-message,
+.single-message {
+  line-height: 16px;
+  padding-left: 2em;
+  padding-right: 2em;
+  background-color: $mainBg;
+}
+.tag {
+  @include border-radius(2px);
+  border: none;
+  padding: 0 5px;
+  line-height: 18px;
+  height: 18px;
+  background: $tagBg;
+}
+.chat-message, .comment-message, .action-message, .line-message, .status-message, .file-message, .error-message, .inbox-comment-message, .mention-message, .inbox-message, .info-message, .single-message {
+  line-height: 16px;
+}
+
+.highlight.chat-message,
+.highlight.comment-message,
+.highlight.action-message,
+.highlight.line-message,
+.highlight.status-message,
+.highlight.file-message,
+.highlight.error-message,
+.highlight.inbox-comment-message,
+.highlight.mention-message,
+.highlight.inbox-message,
+.highlight.info-message,
+.highlight.single-message {
+  background-color: $highlightBg;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) inset;
+}
+.chat-message          pre.formatted,
+.comment-message       pre.formatted,
+.action-message        pre.formatted,
+.line-message          pre.formatted,
+.status-message        pre.formatted,
+.file-message          pre.formatted,
+.error-message         pre.formatted,
+.inbox-comment-message pre.formatted,
+.mention-message       pre.formatted,
+.inbox-message         pre.formatted,
+.info-message          pre.formatted,
+.single-message        pre.formatted {
+  border: none;
+  background-color: $preBg;
+  color: $preColor;
+}
+.inbox-message  .title,
+.info-message   .title,
+.single-message .title,
+.inbox-message  .title > a,
+.info-message   .title > a,
+.single-message .title > a,
+.message-author {
+  font-weight: 400;
+}
+.current .tab-caret-wrapper::before {
+  border-color: transparent transparent $toolbarBg transparent;
+}
+.compact #chat li[class*="message"] {
+  line-height: 16px;
+}
+body.single-pane #pane-switcher {
+  background: #000;
+  border-right: none;
+}
+body.single-pane #pane-switcher:hover {
+  background: $mainBg;
+}
+
+#single {
+  background: $mainBg;
+  form {
+    @include no-box-shadow;
+    background-color: #333;
+    border-color: #000;
+  }
+  .close {
+    background: #000;
+  }
+}
+
+
+/* FONT COLORS */
+.chat-message,
+.comment-message,
+.action-message,
+.line-message,
+.status-message,
+.file-message,
+.error-message,
+.inbox-comment-message,
+#chat .typing-users,
+.deleted.chat-message .content,
+.deleted.comment-message .content,
+.deleted.action-message .content,
+.deleted.line-message .content,
+.deleted.status-message .content,
+.deleted.file-message .content,
+.deleted.error-message .content,
+.deleted.inbox-comment-message .content,
+.deleted.mention-message .content,
+.deleted.inbox-message .content,
+.deleted.info-message .content,
+.deleted.single-message .content,
+.inbox-message .meta,
+.info-message .meta,
+.single-message .meta,
+.inbox-message .excerpt,
+.info-message .excerpt,
+.single-message .excerpt,
+time.timestamp {
+  color: $mainColor;
+}
+.tag,
+.tag a,
+.tokenist-token {
+  color: $tagColor !important;
+}
+.action-message .message-author,
+.line-message .message-author,
+.status-message .message-author,
+.action-message .content,
+.line-message .content,
+.status-message .content,
+.action-message .message-author,
+.line-message .message-author,
+.status-message .message-author,
+.action-message .content,
+.line-message .content,
+.status-message .content,
+.inbox-message .title, .inbox-message .title > a,
+.info-message .title, .info-message .title > a,
+.single-message .title, .single-message .title > a,
+.message-author {
+  color: $activeColor;
+}
+
+/* BORDER COLORS */
+.chat-message,
+.comment-message,
+.action-message,
+.line-message,
+.status-message,
+.file-message,
+.error-message,
+.inbox-comment-message,
+.mention-message,
+.inbox-message,
+.info-message,
+.single-message,
+.chat-message.monologue, .monologue.comment-message, .monologue.action-message, .monologue.line-message, .monologue.status-message, .monologue.file-message, .monologue.error-message, .monologue.inbox-comment-message,
+.highlight.chat-message, .highlight.comment-message, .highlight.action-message, .highlight.line-message, .highlight.status-message, .highlight.file-message, .highlight.error-message, .highlight.inbox-comment-message, .highlight.mention-message, .highlight.inbox-message, .highlight.info-message, .highlight.single-message, .highlight.chat-message + li[class*="message"], .highlight.comment-message + li[class*="message"], .highlight.action-message + li[class*="message"], .highlight.line-message + li[class*="message"], .highlight.status-message + li[class*="message"], .highlight.file-message + li[class*="message"], .highlight.error-message + li[class*="message"], .highlight.inbox-comment-message + li[class*="message"], .highlight.mention-message + li[class*="message"], .highlight.inbox-message + li[class*="message"], .highlight.info-message + li[class*="message"], .highlight.single-message + li[class*="message"] {
+  border-color: $mainBorderColor;
+}
+.chat-message:last-child,
+.comment-message:last-child,
+.action-message:last-child,
+.line-message:last-child,
+.status-message:last-child,
+.file-message:last-child,
+.error-message:last-child,
+.inbox-comment-message:last-child,
+.mention-message:last-child,
+.inbox-message:last-child,
+.info-message:last-child,
+.single-message:last-child {
+  -webkit-box-shadow: 0 1px 0 $mainBorderColor;
+  -moz-box-shadow:    0 1px 0 $mainBorderColor;
+  box-shadow:         0 1px 0 $mainBorderColor;
+  border-bottom: none;
+}
+#inbox li[class*="message"]:last-child,
+.compact #inbox li[class*="message"]:last-child {
+  border-bottom-width: 0;
+}
+
+#inbox li[class*="message"],
+.compact #inbox li[class*="message"] {
+  padding-top: 9px;
+  padding-bottom: 9px;
+  line-height: 16px;
+}
+#inbox li[class*="message"] .excerpt,
+.compact #inbox li[class*="message"] .excerpt {
+  max-height: 32px;
+}
+#inbox li[class*="message"] .avatar,
+#inbox li[class*="message"] .user-menu-avatar,
+.compact #inbox li[class*="message"] .avatar,
+.compact #inbox li[class*="message"] .user-menu-avatar {
+  height: 38px;
+  width:  38px;
+}
+.avatar .type-icon, .user-menu-avatar .type-icon {
+  width:  14px;
+  height: 14px;
+}
+#chat li[class*="message"],
+#inbox li[class*="message"],
+.compact #chat li[class*="message"],
+.compact #inbox li[class*="message"] {
+  border-top-width: 1px;
+}
+
+#filters {
+  background: $mainBg;
+  button {
+    color: $mainColor;
+    &:hover {
+      color: $linkColor;
+    }
+  }
+  li.active button {
+    color: $activeColor;
+    border-left: 0.5em solid $activeColor;
+  }
+}
+
+.tokenist-token {
+  @include no-box-shadow;
+  background: $tagBg;
+}
+
+.tab-fade-wrapper::after {
+  background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, rgba(58,58,58,0)), color-stop(30%, $navbarBg));
+  background-image: -webkit-linear-gradient(left, rgba(58,58,58,0) 0%, $navbarBg 30%);
+  background-image: -moz-linear-gradient(left, rgba(58,58,58,0) 0%, $navbarBg 30%);
+  background-image: -o-linear-gradient(left, rgba(58,58,58,0) 0%, $navbarBg 30%);
+  background-image: -ms-linear-gradient(left, rgba(58,58,58,0) 0%, $navbarBg 30%);
+  background-image: linear-gradient(left, rgba(58,58,58,0) 0%,$navbarBg 30%);
+}
+
+
+.chat-message.date-separator::before,
+.date-separator.comment-message::before,
+.date-separator.action-message::before,
+.date-separator.line-message::before,
+.date-separator.status-message::before,
+.date-separator.file-message::before,
+.date-separator.error-message::before,
+.date-separator.inbox-comment-message::before {
+  color: $mainColor;
+  background: $mainBg;
+  border-color: $mainBorderColor;
+  border-left-color: $mainBorderColor !important;
+}
+#chat li.date-separator[class*="message"]::before,
+.compact #chat li.date-separator[class*="message"]::before {
+  border-top-width: 1px;
+}
+
+#inbox li[class*="message"] .title,
+.compact #inbox li[class*="message"] .title {
+  font-size: $baseFontSize;
+  margin-bottom: 3px;
+}
+
+.inbox-message .meta,
+.info-message .meta,
+.single-message .meta {
+  font-size: $smallFontSize;
+  margin-top: 3px;
+  font-style: italic;
+}
+
+#user-menu,
+.user-menu-name,
+#user-menu .dropdown-indicator,
+#user-menu #more,
+.dropdown-indicator,
+#more {
+  height:      $navbarHeight;
+  line-height: $navbarHeight;
+  padding: 0;
+}
+.tab-fade-wrapper::after {
+  height: $navbarHeight;
+}
+.tab-caret-wrapper {
+  height: $navbarHeight;
+}
+.tab-name {
+  height:      $navbarHeight;
+  line-height: $navbarHeight;
+}
+.dropdown-indicator .normal-icon:before,
+#more .normal-icon:before {
+  font-size: $mediumFontSize;
+  line-height: $navbarHeight;
+  font-size: $mediumFontSize;
+}
+.tab-link {
+  line-height: $navbarHeight;
+  padding: 0 20px;
+}
+.current .tab-caret-wrapper::before {
+  bottom: 0;
+  border-width: 5px;
+}
+.external .message-author {
+  color: $mainColor;
+}
